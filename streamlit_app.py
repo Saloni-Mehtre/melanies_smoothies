@@ -21,9 +21,9 @@ st.dataframe(data=my_dataframe, use_container_width=True)
 # Define ingredients_string before the if block
 ingredients_string = ''
 ingredients_list = st.multiselect(
-     'Choose up to 5 ingredients:',
-     my_dataframe,
-     max_selections= 5
+    'Choose up to 5 ingredients:',
+    my_dataframe,
+    max_selections= 5
 )
 
 if ingredients_list:
