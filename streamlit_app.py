@@ -1,16 +1,14 @@
-
 # Import python packages
 import streamlit as st
 import requests
+import pandas as pd
 from snowflake.snowpark.functions import col
 
 # -------------------------
 # Streamlit UI
 # -------------------------
 st.title(":cup_with_straw: Customize Your Smoothie! :cup_with_straw:")
-st.write(
-    """Choose the fruits you want in your custom smoothie!"""
-)
+st.write("Choose the fruits you want in your custom smoothie!")
 
 # -------------------------
 # Snowflake Connection
@@ -38,7 +36,7 @@ ingredients_list = st.multiselect(
 ingredients_string = ''  # will hold selected fruits
 
 # -------------------------
-# Show Nutrition Information
+# Show Nutrition Information in Table
 # -------------------------
 if ingredients_list:
     ingredients_string = ' '.join(ingredients_list)
@@ -46,19 +44,23 @@ if ingredients_list:
     nutrition_data = []  # collect all nutrition info
 
     for fruit_chosen in ingredients_list:
-        st.subheader(fruit_chosen + ' Nutrition Information')
-
         # API call for nutrition info
         smoothiefroot_response = requests.get(
             "https://my.smoothiefroot.com/api/fruit/" + fruit_chosen
         )
 
-        # Add the JSON response to list
         fruit_data = smoothiefroot_response.json()
-        nutrition_data.append(fruit_data)
 
-        # Show each fruit's data (optional)
-        st.json(fruit_data)
+        # Ensure fruit name is included in the record
+        if isinstance(fruit_data, dict):
+            fruit_data["fruit"] = fruit_chosen
+            nutrition_data.append(fruit_data)
+
+    # Convert to DataFrame for table display
+    if nutrition_data:
+        nutrition_df = pd.DataFrame(nutrition_data)
+        st.subheader("Nutrition Information Table")
+        st.dataframe(nutrition_df, use_container_width=True)
 
     st.write("Your chosen ingredients:", ingredients_string)
 
