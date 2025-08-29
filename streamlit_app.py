@@ -4,8 +4,6 @@ import streamlit as st
 
 from snowflake.snowpark.functions import col
 
- 
-
 # Write directly to the app
 
 st.title(f":cup_with_straw: Customize Your Smoothie! :cup_with_straw:")
@@ -18,8 +16,6 @@ st.write(
 
 )
 
- 
-
 import streamlit as st
 
 cnx = st.connection("snowflake")
@@ -30,20 +26,13 @@ name_on_order = st.text_input("Name on the smoothie:")
 
 st.write("The name on the smoothie will be", name_on_order)
 
- 
-
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
 
 st.dataframe(data=my_dataframe, use_container_width=True)
 
- 
-
 # Define ingredients_string before the if block
 
 ingredients_string = ''
-
- 
-
 ingredients_list = st.multiselect(
 
     'Choose up to 5 ingredients:',
@@ -54,13 +43,9 @@ ingredients_list = st.multiselect(
 
 )
 
- 
-
 if ingredients_list:
 
     ingredients_string = ''
-
-   
 
     for fruit_chosen in ingredients_list: 
 
@@ -72,19 +57,11 @@ if ingredients_list:
 
         sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
 
- 
-
     st.write(ingredients_string)
-
- 
 
     my_insert_stmt = """ insert into smoothies.public.orders(ingredients)
 
                 values ('""" + ingredients_string.strip() + """')"""
-
- 
-
- 
 
     time_to_insert = st.button('Submit Order')
 
