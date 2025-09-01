@@ -42,14 +42,13 @@ if ingredients_list:
         
         
         search_on=pd_df.loc[pd_df['FRUIT_NAME'] == fruit_chosen, 'SEARCH_ON'].iloc[0]
-        st.write('The search value for ', fruit_chosen,' is ', search_on, '.')
+        #st.write('The search value for ', fruit_chosen,' is ', search_on, '.')
 
 
         st.subheader(f"{fruit_chosen} Nutrition Information")
+        fruityvice_response = requests.get( f"https://fruityvice.com/api/fruit/"+search_on)
+        fv_df = st.dataframe(data=fruityvice_resonse.json(), use_container_width=True)
 
-        # Correct API endpoint
-        api_url = f"https://fruityvice.com/api/fruit/{search_on}"
-        fruityvice_response = requests.get(api_url)
 
         # Check API response
         if fruityvice_response.status_code == 200:
